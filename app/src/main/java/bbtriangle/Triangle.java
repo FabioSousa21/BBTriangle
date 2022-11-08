@@ -53,11 +53,8 @@ public class Triangle {
      */
     public double getArea() {
         if (!isImpossible()) {
-            return Math.sqrt(getPerimeter()
-                    / 2
-                    * (getPerimeter() / 2 - side1)
-                    * (getPerimeter() / 2 - side2)
-                    * (getPerimeter() / 2 - side3));
+            return 0.25 * Math.sqrt((side1 + side2 + side3) * (-side1 + side2 + side3) * 
+                (side1 - side2 + side3) * (side1 + side2 - side3) );
         }
         return -1;
     }
@@ -74,15 +71,14 @@ public class Triangle {
      * @return type of the triangle as a string.
      */
     public String classify() {
-        if (isImpossible()) {
+        if (this.isImpossible()) {
             return P_IMPOSSIBLE;
         }
-        if (side1 == side2) {
-            if (side2 == side3) {
-                return P_EQUILATERAL;
-            } else {
-                return P_ISOSCELES;
-            }
+        if (this.isEquilateral()) {
+            return P_EQUILATERAL;
+        }
+        if (this.isIsosceles()) {
+            return P_ISOSCELES;
         }
         if (isRightAngled()) {
             return P_RIGHTANGLED;
@@ -108,7 +104,7 @@ public class Triangle {
      * @return true if all three sides have equal length.
      */
     public boolean isEquilateral() {
-        if (side1 == side3) {
+        if (side1 == side2 && side2 == side3) {
             return true;
         }
         return false;
@@ -122,10 +118,26 @@ public class Triangle {
      * alterei este metodo...
      */
     public boolean isRightAngled() {
-        //int[] sides = new int[]{side1, side2, side3};
-        if(this.side1*this.side1==(this.side2*this.side2)+(this.side3*this.side3)){
-            return true;
+        int[] sides = new int[]{side1, side2, side3};
 
+        int max = 0;
+        if (sides[max] < sides[1]) {
+            max = 1;
+        }
+        if (sides[max] < sides[2]) {
+            max = 2;
+        }
+
+        int index = 0;
+        int[] peccaries = new int[sides.length - 1]; 
+        for (int i = 0; i < sides.length; i++) {
+            if (i != max) {
+                peccaries[index++] = sides[i];
+            }
+        }
+
+        if(Math.pow(sides[max], 2) == Math.pow(peccaries[0], 2) + Math.pow(peccaries[1], 2)){
+            return true;
         }else{
             return false;
         }
@@ -151,6 +163,17 @@ public class Triangle {
         if (side1 <= 0 || side2 <= 0 || side3 <= 0) {
             return true;
         }
+
+        int max = 0;
+        int[] sides = new int[]{side1, side2, side3}; 
+        if (sides[max] < sides[1]) { max = 1; }
+        if (sides[max] < sides[2]) {  max = 2; }
+
+        int perimeter = this.getPerimeter();
+        if (Double.valueOf(sides[max]) >= perimeter / 2d) {
+            return true;
+        }
+
         return false;
     }
 
