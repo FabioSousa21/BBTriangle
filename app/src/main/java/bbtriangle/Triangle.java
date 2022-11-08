@@ -1,4 +1,4 @@
-package triangle;
+package bbtriangle;
 
 public class Triangle {
 
