@@ -122,15 +122,13 @@ public class Triangle {
      * alterei este metodo...
      */
     public boolean isRightAngled() {
-        int[] sides = new int[]{side1, side2, side3};
+        //int[] sides = new int[]{side1, side2, side3};
         if(this.side1*this.side1==(this.side2*this.side2)+(this.side3*this.side3)){
             return true;
 
         }else{
             return false;
         }
-
-
     }
 
     /**
