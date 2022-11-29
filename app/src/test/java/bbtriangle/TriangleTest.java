@@ -1,10 +1,20 @@
 package bbtriangle;
 
-import java.text.DecimalFormat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.function.ThrowingConsumer;
+
+import com.google.common.base.Function;
 
 public class TriangleTest {
     
@@ -117,6 +127,40 @@ public class TriangleTest {
         
         triangle.setSideLengths(2, 3, 2);
         Assertions.assertEquals(false, triangle.isImpossible());
+    }
+
+    @TestFactory
+    Stream<DynamicTest> dynamicTestFromStream() {
+        List<Triangle> inputTriangles = Arrays.asList(
+            new Triangle(2, 2, 2), new Triangle(5, 6, 7), new Triangle (1000,10,10)
+        );
+        // expected classification results
+        List<String> outputClassification = Arrays.asList(
+            "equilateral", "scalene", "impossible"
+        );
+        
+        //input generator ()
+        Iterator<Triangle> inputGenerator = inputTriangles.iterator(); // returns de Triangle one by one
+
+ 
+
+        // diplay name generator. Build the display name for each test in the form "Classification of Triangle: s1,s2,s3" , "Testing isosceles Classification", ...
+        Function<Triangle, String> displayNameGenerator 
+         = (input) -> "Classification of Triangle: " + input.getSideLengths();
+
+ 
+
+        // test executor
+        ThrowingConsumer<Triangle> testExecutor = input -> {
+            int pos = inputTriangles.indexOf(input);
+            
+            assertEquals(outputClassification.get(pos),input.classify());
+        };
+        // return stream
+
+ 
+
+        return DynamicTest.stream(inputGenerator, displayNameGenerator, testExecutor);
     }
 
 }
